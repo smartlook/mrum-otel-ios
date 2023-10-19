@@ -12,14 +12,14 @@ let package = Package(
         .watchOS(.v3)
     ],
     products: [
-        .library(name: "OpenTelemetryApi", type: .static, targets: ["OpenTelemetryApi"]),
-        .library(name: "OpenTelemetrySdk", type: .static, targets: ["OpenTelemetrySdk"]),
-        .library(name: "ResourceExtension", type: .static, targets: ["ResourceExtension"]),
-        .library(name: "URLSessionInstrumentation", type: .static, targets: ["URLSessionInstrumentation"]),
-        .library(name: "StdoutExporter", type: .static, targets: ["StdoutExporter"]),
-        .library(name: "OpenTelemetryProtocolExporterHTTP", type: .static, targets: ["OpenTelemetryProtocolExporterHttp"]),
-        .library(name: "PersistenceExporter", type: .static, targets: ["PersistenceExporter"]),
-        .library(name: "NetworkStatus", type: .static, targets: ["NetworkStatus"])
+        .library(name: "OpenTelemetryApi", targets: ["OpenTelemetryApi"]),
+        .library(name: "OpenTelemetrySdk", targets: ["OpenTelemetrySdk"]),
+        .library(name: "ResourceExtension", targets: ["ResourceExtension"]),
+        .library(name: "URLSessionInstrumentation", targets: ["URLSessionInstrumentation"]),
+        .library(name: "StdoutExporter", targets: ["StdoutExporter"]),
+        .library(name: "OpenTelemetryProtocolExporterHTTP", targets: ["OpenTelemetryProtocolExporterHttp"]),
+        .library(name: "PersistenceExporter", targets: ["PersistenceExporter"]),
+        .library(name: "NetworkStatus", targets: ["NetworkStatus"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.20.2"),
