@@ -15,6 +15,7 @@ public enum AttributeValue: Equatable, CustomStringConvertible, Hashable {
   case boolArray([Bool])
   case intArray([Int])
   case doubleArray([Double])
+  case data(Data)
   case set(AttributeSet)
 
   public var description: String {
@@ -34,6 +35,8 @@ public enum AttributeValue: Equatable, CustomStringConvertible, Hashable {
     case let .intArray(value):
       return value.description
     case let .doubleArray(value):
+      return value.description
+    case let .data(value):
       return value.description
     case let .set(value):
       return value.labels.description
@@ -58,6 +61,8 @@ public enum AttributeValue: Equatable, CustomStringConvertible, Hashable {
       self = .intArray(val)
     case let val as [Double]:
       self = .doubleArray(val)
+    case let val as Data:
+      self = .data(val)
     case let val as AttributeSet:
       self = .set(val)
     default:
@@ -95,6 +100,10 @@ extension AttributeValue {
     self = .doubleArray(value)
   }
 
+  public init(_ value: Data) {
+    self = .data(value)
+  }
+  
   public init(_ value: AttributeSet) {
     self = .set(value)
   }
@@ -112,6 +121,7 @@ internal struct AttributeValueExplicitCodable: Codable {
     case boolArray
     case intArray
     case doubleArray
+    case data
     case set
   }
 
@@ -172,6 +182,11 @@ internal struct AttributeValueExplicitCodable: Codable {
         keyedBy: AssociatedValueCodingKeys.self, forKey: .doubleArray)
       self.attributeValue = .doubleArray(
         try nestedContainer.decode([Double].self, forKey: .associatedValue))
+    case .data:
+      let nestedContainer = try container.nestedContainer(
+        keyedBy: AssociatedValueCodingKeys.self, forKey: .data)
+      self.attributeValue = .data(
+        try nestedContainer.decode(Data.self, forKey: .associatedValue))
     case .set:
       let nestedContainer = try container.nestedContainer(
         keyedBy: AssociatedValueCodingKeys.self, forKey: .set)
@@ -215,6 +230,10 @@ internal struct AttributeValueExplicitCodable: Codable {
     case let .doubleArray(value):
       var nestedContainer = container.nestedContainer(
         keyedBy: AssociatedValueCodingKeys.self, forKey: .doubleArray)
+      try nestedContainer.encode(value, forKey: .associatedValue)
+    case let .data(value):
+      var nestedContainer = container.nestedContainer(
+        keyedBy: AssociatedValueCodingKeys.self, forKey: .data)
       try nestedContainer.encode(value, forKey: .associatedValue)
     case let .set(value):
       var nestedContainer = container.nestedContainer(

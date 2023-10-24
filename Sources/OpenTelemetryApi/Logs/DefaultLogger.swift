@@ -57,6 +57,10 @@ public class DefaultLogger: Logger {
       return self
     }
 
+    func setBody(_ body: AttributeValue) -> Self {
+      return self
+    }
+
     func setAttributes(_ attributes: [String: AttributeValue]) -> Self {
       return self
     }

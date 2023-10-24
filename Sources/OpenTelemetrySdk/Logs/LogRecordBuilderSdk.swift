@@ -14,7 +14,7 @@ public class LogRecordBuilderSdk: EventBuilder {
   private var includeSpanContext: Bool
   private var timestamp: Date?
   private var observedTimestamp: Date?
-  private var body: String?
+  private var body: AttributeValue?
   private var severity: Severity?
   private var attributes: AttributesDictionary
   private var spanContext: SpanContext?
@@ -54,6 +54,11 @@ public class LogRecordBuilderSdk: EventBuilder {
   }
 
   public func setBody(_ body: String) -> Self {
+    self.body = AttributeValue(body)
+    return self
+  }
+
+  public func setBody(_ body: AttributeValue) -> Self {
     self.body = body
     return self
   }
