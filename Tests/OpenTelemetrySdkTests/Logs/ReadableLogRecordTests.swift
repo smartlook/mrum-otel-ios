@@ -25,7 +25,7 @@ class ReadableLogRecordTests : XCTestCase {
         
             let logRecord = processor.onEmitCalledLogRecord
         XCTAssertEqual(logRecord?.observedTimestamp, observedTimestamp)
-        XCTAssertEqual(logRecord?.body, "hello, world")
+        XCTAssertEqual(logRecord?.body, AttributeValue("hello, world"))
         XCTAssertEqual(logRecord?.attributes.count, 1)
         let key = logRecord?.attributes.keys.first
         XCTAssertEqual(logRecord?.attributes[key!]?.description.count, 1)
