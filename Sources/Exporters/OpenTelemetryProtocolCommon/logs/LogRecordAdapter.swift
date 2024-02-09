@@ -46,7 +46,7 @@ public class LogRecordAdapter {
     protoLogRecord.timeUnixNano = logRecord.timestamp.timeIntervalSince1970.toNanoseconds
     
     if let body = logRecord.body {
-      protoLogRecord.body = CommonAdapter.toProtoAttribute(attributeValue: body)
+      protoLogRecord.body = CommonAdapter.toProtoAnyValue(attributeValue: body)
     }
     
     if let severity = logRecord.severity {

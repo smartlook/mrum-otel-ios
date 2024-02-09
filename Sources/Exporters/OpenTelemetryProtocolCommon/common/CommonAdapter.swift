@@ -56,51 +56,49 @@ public struct CommonAdapter {
     return keyValue
   }
   
-  public static func toProtoAttribute(attributeValue: AttributeValue)
-  -> Opentelemetry_Proto_Common_V1_AnyValue
-  {
-    var attribValue = Opentelemetry_Proto_Common_V1_AnyValue()
+  public static func toProtoAnyValue(attributeValue: AttributeValue) -> Opentelemetry_Proto_Common_V1_AnyValue {
+    var anyValue = Opentelemetry_Proto_Common_V1_AnyValue()
     switch attributeValue {
     case let .string(value):
-      attribValue.stringValue = value
+      anyValue.stringValue = value
     case let .bool(value):
-      attribValue.boolValue = value
+      anyValue.boolValue = value
     case let .int(value):
-      attribValue.intValue = Int64(value)
+      anyValue.intValue = Int64(value)
     case let .double(value):
-      attribValue.doubleValue = value
+      anyValue.doubleValue = value
     case let .stringArray(value):
-      attribValue.arrayValue.values = value.map {
+      anyValue.arrayValue.values = value.map {
         var anyValue = Opentelemetry_Proto_Common_V1_AnyValue()
         anyValue.stringValue = $0
         return anyValue
       }
     case let .boolArray(value):
-      attribValue.arrayValue.values = value.map {
+      anyValue.arrayValue.values = value.map {
         var anyValue = Opentelemetry_Proto_Common_V1_AnyValue()
         anyValue.boolValue = $0
         return anyValue
       }
     case let .intArray(value):
-      attribValue.arrayValue.values = value.map {
+      anyValue.arrayValue.values = value.map {
         var anyValue = Opentelemetry_Proto_Common_V1_AnyValue()
         anyValue.intValue = Int64($0)
         return anyValue
       }
     case let .doubleArray(value):
-      attribValue.arrayValue.values = value.map {
+      anyValue.arrayValue.values = value.map {
         var anyValue = Opentelemetry_Proto_Common_V1_AnyValue()
         anyValue.doubleValue = $0
         return anyValue
       }
     case let .data(value):
-      attribValue.bytesValue = value
+        anyValue.bytesValue = value
     case let .set(value):
-      attribValue.kvlistValue.values = value.labels.map({
+      anyValue.kvlistValue.values = value.labels.map({
         return toProtoAttribute(key: $0, attributeValue: $1)
       })
     }
-    return attribValue
+    return anyValue
   }
   
   public static func toProtoInstrumentationScope(instrumentationScopeInfo: InstrumentationScopeInfo)

@@ -53,11 +53,6 @@ public class LogRecordBuilderSdk: EventBuilder {
     return self
   }
 
-  public func setBody(_ body: String) -> Self {
-    self.body = AttributeValue(body)
-    return self
-  }
-
   public func setBody(_ body: AttributeValue) -> Self {
     self.body = body
     return self

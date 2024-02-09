@@ -6,7 +6,7 @@
 import Foundation
 
 public protocol LogRecordBuilder {
-    /// set the timestamp on which the event ocurred
+    /// set the timestamp on which the event occurred
     ///
     /// - Parameter timestamp: the Date object
     /// - Returns: self
@@ -30,19 +30,13 @@ public protocol LogRecordBuilder {
     /// - Returns: self
     func setSeverity(_ severity: Severity) -> Self
 
-    /// set the body with a string value.
+    /// set the body string.
     ///
     /// - Parameter body: string value of the log
     /// - Returns: self
-    func setBody(_ body: String) -> Self
-
-    /// set the body with any value in AttributeValue.
-    ///
-    /// - Parameter body: AttributeValue body of the log
-    /// - Returns: self
     func setBody(_ body: AttributeValue) -> Self
 
-    /// set attributes assoicated with the log.
+    /// set attributes associated with the log.
     ///
     /// - Parameter attributes: Array of [String: AttributeValue]
     /// - Returns:

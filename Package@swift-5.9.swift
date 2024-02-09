@@ -43,7 +43,6 @@ let package = Package(
         .target(name: "NetworkStatus",
                 dependencies: [
                     "OpenTelemetryApi",
-                    .product(name: "Reachability", package: "Reachability.swift", condition: .when(platforms: [.iOS, .macOS, .tvOS, .macCatalyst, .linux]))
                 ],
                 path: "Sources/Instrumentation/NetworkStatus",
                 linkerSettings: [.linkedFramework("CoreTelephony", .when(platforms: [.iOS], configuration: nil))]),
@@ -69,7 +68,6 @@ let package = Package(
         .testTarget(name: "NetworkStatusTests",
                     dependencies: [
                         "NetworkStatus",
-                        .product(name: "Reachability", package: "Reachability.swift", condition: .when(platforms: [.iOS, .macOS, .tvOS, .macCatalyst, .linux]))
                     ],
                     path: "Tests/InstrumentationTests/NetworkStatusTests"),
         .testTarget(name: "OpenTelemetryApiTests",
