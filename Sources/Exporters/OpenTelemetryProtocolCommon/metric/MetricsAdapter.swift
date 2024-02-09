@@ -8,7 +8,7 @@ import OpenTelemetrySdk
 
 public enum MetricsAdapter {
   public static func toProtoResourceMetrics(stableMetricData: [StableMetricData]) -> [Opentelemetry_Proto_Metrics_V1_ResourceMetrics] {
-    let resourceAndScopeMap = groupByResouceAndScope(stableMetricData: stableMetricData)
+    let resourceAndScopeMap = groupByResourceAndScope(stableMetricData: stableMetricData)
     
     var resourceMetrics = [Opentelemetry_Proto_Metrics_V1_ResourceMetrics]()
     resourceAndScopeMap.forEach { resMap in
@@ -31,7 +31,7 @@ public enum MetricsAdapter {
   }
   
   public static func toProtoResourceMetrics(metricDataList: [Metric]) -> [Opentelemetry_Proto_Metrics_V1_ResourceMetrics] {
-    let resourceAndScopeMap = groupByResouceAndScope(metricDataList: metricDataList)
+    let resourceAndScopeMap = groupByResourceAndScope(metricDataList: metricDataList)
     var resourceMetrics = [Opentelemetry_Proto_Metrics_V1_ResourceMetrics]()
     
     resourceAndScopeMap.forEach { resMap in
@@ -55,7 +55,7 @@ public enum MetricsAdapter {
     return resourceMetrics
   }
   
-  private static func groupByResouceAndScope(stableMetricData: [StableMetricData]) -> [Resource: [InstrumentationScopeInfo: [Opentelemetry_Proto_Metrics_V1_Metric]]] {
+  private static func groupByResourceAndScope(stableMetricData: [StableMetricData]) -> [Resource: [InstrumentationScopeInfo: [Opentelemetry_Proto_Metrics_V1_Metric]]] {
     var results = [Resource: [InstrumentationScopeInfo: [Opentelemetry_Proto_Metrics_V1_Metric]]]()
     
     stableMetricData.forEach {
@@ -66,7 +66,7 @@ public enum MetricsAdapter {
     return results
   }
   
-  private static func groupByResouceAndScope(metricDataList: [Metric]) -> [Resource: [InstrumentationScopeInfo: [Opentelemetry_Proto_Metrics_V1_Metric]]] {
+  private static func groupByResourceAndScope(metricDataList: [Metric]) -> [Resource: [InstrumentationScopeInfo: [Opentelemetry_Proto_Metrics_V1_Metric]]] {
     var results = [Resource: [InstrumentationScopeInfo: [Opentelemetry_Proto_Metrics_V1_Metric]]]()
     
     metricDataList.forEach {
@@ -103,8 +103,9 @@ public enum MetricsAdapter {
         var protoDataPoint = Opentelemetry_Proto_Metrics_V1_NumberDataPoint()
         injectPointData(protoNumberPoint: &protoDataPoint, pointData: gaugeData)
         protoDataPoint.value = .asInt(Int64(gaugeData.value))
-        protoMetric.sum.aggregationTemporality = .cumulative
+        protoMetric.sum.aggregationTemporality = stableMetric.data.aggregationTemporality.convertToProtoEnum()
         protoMetric.sum.dataPoints.append(protoDataPoint)
+        protoMetric.sum.isMonotonic = stableMetric.isMonotonic
       case .DoubleGauge:
         guard let gaugeData = $0 as? DoublePointData else {
           break
@@ -120,8 +121,9 @@ public enum MetricsAdapter {
         var protoDataPoint = Opentelemetry_Proto_Metrics_V1_NumberDataPoint()
         injectPointData(protoNumberPoint: &protoDataPoint, pointData: gaugeData)
         protoDataPoint.value = .asDouble(gaugeData.value)
-        protoMetric.sum.aggregationTemporality = .cumulative
+        protoMetric.sum.aggregationTemporality = stableMetric.data.aggregationTemporality.convertToProtoEnum()
         protoMetric.sum.dataPoints.append(protoDataPoint)
+        protoMetric.sum.isMonotonic = stableMetric.isMonotonic
       case .Summary:
         guard let summaryData = $0 as? SummaryPointData else {
           break
@@ -147,7 +149,7 @@ public enum MetricsAdapter {
         protoDataPoint.count = UInt64(histogramData.count)
         protoDataPoint.explicitBounds = histogramData.boundaries.map { Double($0) }
         protoDataPoint.bucketCounts = histogramData.counts.map { UInt64($0) }
-        protoMetric.histogram.aggregationTemporality = .cumulative
+        protoMetric.histogram.aggregationTemporality = stableMetric.data.aggregationTemporality.convertToProtoEnum()
         protoMetric.histogram.dataPoints.append(protoDataPoint)
       case .ExponentialHistogram:
         // TODO: implement
@@ -392,5 +394,16 @@ public enum MetricsAdapter {
       }
     }
     return protoMetric
+  }
+}
+
+extension AggregationTemporality {
+  func convertToProtoEnum() -> Opentelemetry_Proto_Metrics_V1_AggregationTemporality {
+    switch self {
+    case .cumulative:
+      return .cumulative
+    case .delta:
+      return .delta
+    }
   }
 }
